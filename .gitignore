@@ -1,4 +1,8 @@
-nbproject/
-build/
-build.xml
-manifest.mf
+.idea
+.idea/*
+*.iml
+*/*.iml
+out
+out/*
+data
+data/*
