@@ -1,13 +1,13 @@
-package ge.tsu.card.problem;
+package ge.tsu.card.problem.ga;
 
-import ge.tsu.card.problem.data.ProblemData;
+import ge.tsu.card.problem.data.AlgorithmData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Population {
 
-    private List<Chromosome> chromosomes;       // პოპულაციაში არსებული ქრომოსომები
+    private List<Chromosome> chromosomes;
 
     public Population() {
         chromosomes = new ArrayList<>();
@@ -25,14 +25,9 @@ public class Population {
         this.chromosomes = chromosomes;
     }
 
-    /**
-     * საწყისი, შემთხვევითი პოპულაციის მიღება.
-     *
-     * @return საწყისი პოპულაცია
-     */
     public static Population initPopulation() {
         Population p = new Population();
-        for (int i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
+        for (int i = 0; i < AlgorithmData.NUMBER_OF_CHROMOSOMES; i++) {
             p.getChromosomes().add(Chromosome.getRandomChromosome());
         }
         return p;

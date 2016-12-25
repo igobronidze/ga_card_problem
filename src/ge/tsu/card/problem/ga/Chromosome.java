@@ -1,4 +1,4 @@
-package ge.tsu.card.problem;
+package ge.tsu.card.problem.ga;
 
 import ge.tsu.card.problem.data.ProblemData;
 
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Chromosome {
 
-    private List<Boolean> genes;      // გენები (0 ან 1)
+    private List<Boolean> genes;
 
     public Chromosome() {
         genes = new ArrayList<>();
@@ -33,11 +33,6 @@ public class Chromosome {
         this.genes = genes;
     }
 
-    /**
-     * მეთოდი შემთხვევითად ქმნის ქრომოსომას.
-     *
-     * @return შემთქვევითად შექმნილი ქრომოსომა
-     */
     public static Chromosome getRandomChromosome() {
         Random r = new Random();
         Chromosome c = new Chromosome(ProblemData.NUMBER_OF_CARDS);
@@ -47,20 +42,23 @@ public class Chromosome {
         return c;
     }
 
-    /**
-     * ფიტნეს ფუნქცია - ითვლება არჩეული გენების შესაბამისი ელემენტების
-     * ჯამი, შესბამისი ელემენტების ნამრავლი და ბრუნდება ჯამი
-     * მოდულების მიღებული ჯამებისა და ამოცანის პირობის
-     *
-     * @return ფიტნეს ფუნქციის მნიშვნელობა
-     */
     public int fitness() {
+        return getDifferenceBetweenProduct() + getDifferenceBetweenSum();
+    }
+
+    public int getDifferenceBetweenSum() {
         int sum = 0;
-        int product = 1;
         for (int i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
             sum += ProblemData.CARDS[i] * (genes.get(i) ? 1 : 0);
+        }
+        return Math.abs(sum - ProblemData.SUM);
+    }
+
+    public int getDifferenceBetweenProduct() {
+        int product = 1;
+        for (int i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
             product *= ProblemData.CARDS[i] * (genes.get(i) ? 1 : 0);
         }
-        return Math.abs(product - ProblemData.PRODUCT) + Math.abs(sum - ProblemData.SUM);
+        return Math.abs(product - ProblemData.PRODUCT);
     }
 }
