@@ -47,18 +47,53 @@ public class Chromosome {
     }
 
     public int getDifferenceBetweenSum() {
+        return Math.abs(getSum() - ProblemData.SUM);
+    }
+
+    public int getDifferenceBetweenProduct() {
+        return Math.abs(getProduct() - ProblemData.PRODUCT);
+    }
+
+    public int getSum() {
         int sum = 0;
         for (int i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
             sum += ProblemData.CARDS[i] * (genes.get(i) ? 1 : 0);
         }
-        return Math.abs(sum - ProblemData.SUM);
+        return sum;
     }
 
-    public int getDifferenceBetweenProduct() {
+    public int getProduct() {
         int product = 1;
         for (int i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
-            product *= ProblemData.CARDS[i] * (genes.get(i) ? 1 : 0);
+            if (!genes.get(i)) {
+                product *= ProblemData.CARDS[i];
+            }
         }
-        return Math.abs(product - ProblemData.PRODUCT);
+        return product;
+    }
+
+    public String toString() {
+        String info = "------------------------საუკეთესო ინდივიდი------------------------" + System.lineSeparator();
+        info += "ჯამისთვის არჩეულები - ";
+        for (int  i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
+            if (genes.get(i)) {
+                info += ProblemData.CARDS[i] + ", ";
+            }
+        }
+        info += System.lineSeparator();
+        info += "სასურველი ჯამი - " + ProblemData.SUM + "     ";
+        info += "მიღებული ჯამი - " + getSum() + "     ";
+        info += "სხვაობა - " + getDifferenceBetweenSum() + System.lineSeparator();
+        info += "ნამრავლისთვის არჩეულები - ";
+        for (int  i = 0; i < ProblemData.NUMBER_OF_CARDS; i++) {
+            if (!genes.get(i)) {
+                info += ProblemData.CARDS[i] + ", ";
+            }
+        }
+        info += "სასურველი ნამრავლი - " + ProblemData.PRODUCT + "     ";
+        info += "მიღებული ნამრავლი - " + getProduct() + "     ";
+        info += "სხვაობა - " + getDifferenceBetweenProduct() + System.lineSeparator();
+        info += "მთლიანი სხვაობა - " + fitness();
+        return info;
     }
 }

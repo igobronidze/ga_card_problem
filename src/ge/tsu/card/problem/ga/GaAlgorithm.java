@@ -22,8 +22,8 @@ public class GaAlgorithm {
             for (Chromosome c : population.getChromosomes()) {
                 fitnessList.add(c.fitness());
             }
-            Chromosome parent1 = new Chromosome();
-            Chromosome parent2 = new Chromosome();
+            Chromosome parent1 = new Chromosome(ProblemData.NUMBER_OF_CARDS);
+            Chromosome parent2 = new Chromosome(ProblemData.NUMBER_OF_CARDS);
             RouletteWheelSelection(parent1, parent2);
             crossoverAndReplace(parent1, parent2);
             mutation();
@@ -31,8 +31,8 @@ public class GaAlgorithm {
             System.out.println("თაობა - " + generation + "     " +
                     "სხვაობა ჯამში - " + getBestAnswer().getDifferenceBetweenSum() + "     " +
                     "სხვაობა ნამრავლში - " + getBestAnswer().getDifferenceBetweenProduct() + "     " +
-                    "საუკეთესოს ფიტნესი - " + getBestAnswer().fitness() + "     " +
-                    "დამთხვევა პოპულაციაში - " + 100 * percentageOfSames(fitnessList) + "%");
+                    "ყველაზე მცირე ფიტნესი - " + getBestAnswer().fitness() + "     " +
+                    "საუკეთესოს პროცენტული რაოდენობა პოპულაციაში - " + 100 * percentageOfSames(fitnessList) + "%");
             if (percentageOfSames(fitnessList) >= AlgorithmData.GOAL_CONDITION) {
                 System.out.println(getBestAnswer());
                 break;
@@ -64,8 +64,10 @@ public class GaAlgorithm {
             }
             j++;
         }
-        parent1.setGenes(population.getChromosomes().get(i).getGenes());
-        parent2.setGenes(population.getChromosomes().get(j).getGenes());
+        for (int k = 0; k < ProblemData.NUMBER_OF_CARDS; k++) {
+            parent1.getGenes().set(k, population.getChromosomes().get(i).getGenes().get(k));
+            parent2.getGenes().set(k, population.getChromosomes().get(j).getGenes().get(k));
+        }
     }
 
     private static void crossoverAndReplace(Chromosome parent1, Chromosome parent2) {
@@ -90,19 +92,23 @@ public class GaAlgorithm {
 
     private static void replaceChromosomes(Chromosome child1, Chromosome child2) {
         int m1 = 0;
-        for (int i = 0; i<fitnessList.size(); i++) {
-            if (fitnessList.get(i) < fitnessList.get(m1)) {
+        for (int i = 0; i < fitnessList.size(); i++) {
+            if (fitnessList.get(i) > fitnessList.get(m1)) {
                 m1 = i;
             }
         }
         int m2 = 0;
         for (int i = 0; i<fitnessList.size(); i++) {
-            if (m1 != i && fitnessList.get(i) < fitnessList.get(m2)) {
+            if (m1 != i && fitnessList.get(i) > fitnessList.get(m2)) {
                 m2 = i;
             }
         }
-        population.getChromosomes().set(m1, child1);
-        population.getChromosomes().set(m2, child2);
+        if (population.getChromosomes().get(m1).fitness() > child1.fitness()) {
+            population.getChromosomes().set(m1, child1);
+        }
+        if (population.getChromosomes().get(m2).fitness() > child2.fitness()) {
+            population.getChromosomes().set(m2, child2);
+        }
     }
 
     private static void mutation() {
@@ -130,15 +136,15 @@ public class GaAlgorithm {
     }
 
     private static Double percentageOfSames(List<Integer> arr) {
-        int max = arr.get(0);
+        int min = arr.get(0);
         for (int a : arr) {
-            if (a > max) {
-                max = a;
+            if (a < min) {
+                min = a;
             }
         }
         int x = 0;
         for (int a : arr) {
-            if (max == a) {
+            if (min == a) {
                 x++;
             }
         }
